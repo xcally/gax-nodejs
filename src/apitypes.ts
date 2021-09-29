@@ -15,6 +15,7 @@
  */
 
 import {Duplex} from 'stream';
+import * as computeOperationProtos from '../protos/compute_operations';
 
 import {CancellablePromise} from './call';
 import {CallOptions} from './gax';
@@ -120,3 +121,39 @@ export interface GRPCCallOtherArgs {
   headers?: {};
   metadataBuilder: (abTests?: {}, headers?: {}) => {};
 }
+
+export type ComputeLROOperation =
+  computeOperationProtos.google.cloud.compute.v1.Operation;
+
+type GlobalOperationRequest = {
+  operation?: string;
+  project?: string;
+};
+
+type RegionOperationRequest = {
+  operation?: string;
+  project?: string;
+  region?: string;
+};
+
+type ZoneOperationRequest = {
+  operation?: string;
+  project?: string;
+  zone?: string;
+};
+
+type GlobalOrganizationOperationRequest = {
+  project?: string;
+  parentId?: string;
+};
+
+export type ComputeOperationRequest =
+  | GlobalOperationRequest
+  | ZoneOperationRequest
+  | RegionOperationRequest
+  | GlobalOrganizationOperationRequest;
+
+export type ComputeOperationClient = {
+  getProjectId(): Promise<string>;
+  get(request: ComputeOperationRequest): Promise<ResultTuple>;
+};
