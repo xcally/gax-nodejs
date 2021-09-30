@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {ComputeOptions} from 'google-auth-library';
 import * as protobuf from 'protobufjs';
 import {ComputeOperationClient} from '../apitypes';
 import {Descriptor} from '../descriptor';
@@ -34,13 +33,13 @@ export interface AnyDecoder {
 export class LongRunningDescriptor implements Descriptor {
   operationsClient: OperationsClient | ComputeOperationClient;
   responseDecoder: AnyDecoder;
-  metadataDecoder: AnyDecoder;
+  metadataDecoder: AnyDecoder | null;
   diregapic?: boolean;
 
   constructor(
-    operationsClient: OperationsClient,
+    operationsClient: OperationsClient | ComputeOperationClient,
     responseDecoder: AnyDecoder,
-    metadataDecoder: AnyDecoder,
+    metadataDecoder: AnyDecoder | null,
     diregapic?: boolean
   ) {
     this.operationsClient = operationsClient;

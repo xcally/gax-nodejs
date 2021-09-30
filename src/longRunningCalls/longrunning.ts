@@ -56,9 +56,7 @@ function fromComputeOperationError(
   if (!operation.httpErrorMessage && !operation.httpErrorStatusCode) {
     return undefined;
   }
-  const errMessage = `${operation.httpErrorStatusCode} ${
-    Status[operation.httpErrorStatusCode!]
-  }: ${operation.httpErrorMessage}`;
+  const errMessage = `${operation.httpErrorStatusCode}: ${operation.httpErrorMessage}`;
   return Object.assign(new GoogleError(errMessage), operation.error);
 }
 
@@ -195,7 +193,6 @@ export class Operation extends EventEmitter {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const operationsClient = this.longrunningDescriptor.operationsClient;
-
     function promisifyResponse() {
       if (!callback) {
         return new Promise((resolve, reject) => {
@@ -212,7 +209,7 @@ export class Operation extends EventEmitter {
               const computeErr = fromComputeOperationError(self.latestResponse);
               reject(computeErr);
             } else {
-              resolve([self.result, null, self.latestResponse]);
+              resolve([self.latestResponse, null, self.latestResponse]);
             }
           }
         });
@@ -329,6 +326,9 @@ export class Operation extends EventEmitter {
     );
   }
 
+  // Polling request require fields has been checked in the LRO method before
+  // operation.promise() has been called. Transcoding will throw error if any required
+  // fields missing.
   _composeComputeRequest(): ComputeOperationRequest {
     const request: {[k: string]: unknown} = {
       project: this.computeRequest?.project,
