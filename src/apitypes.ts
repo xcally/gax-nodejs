@@ -154,6 +154,5 @@ export type ComputeOperationRequest =
   | GlobalOrganizationOperationRequest;
 
 export type ComputeOperationClient = {
-  getProjectId(): Promise<string>;
   get(request: ComputeOperationRequest): Promise<ResultTuple>;
 };

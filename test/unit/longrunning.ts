@@ -907,7 +907,6 @@ describe('diregapic longrunning', () => {
         assert.strictEqual(operation.result, null);
         assert.strictEqual(operation.metadata, null);
         assert.deepStrictEqual(operation.latestResponse, SUCCESSFUL_COMPUTE_OP);
-        assert.strictEqual(client.getProjectId.callCount, 1);
         done();
       });
 
@@ -1085,7 +1084,6 @@ describe('diregapic longrunning', () => {
                 assert.strictEqual(metadata, null);
                 assert.deepStrictEqual(rawResponse, SUCCESSFUL_COMPUTE_OP);
                 assert.strictEqual(client.get.callCount, 0);
-                assert.strictEqual(client.getProjectId.callCount, 0);
                 done();
               });
             })
@@ -1122,12 +1120,8 @@ describe('diregapic longrunning', () => {
           }
           return promise;
         });
-        const getProjectIdSpy = sinon.spy(() => {
-          return Promise.resolve();
-        });
         return {
           get: getSpy,
-          getProjectId: getProjectIdSpy,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
       }
