@@ -28,7 +28,6 @@ import {
   GoogleAuthOptions,
   BaseExternalAccountClient,
 } from 'google-auth-library';
-import * as objectHash from 'object-hash';
 import {OperationsClientBuilder} from './operationsClient';
 import {GrpcClientOptions, ClientStubOptions} from './grpc';
 import {GaxCall, GRPCCall} from './apitypes';
@@ -39,7 +38,9 @@ import * as fallbackProto from './fallbackProto';
 import * as fallbackRest from './fallbackRest';
 import {isNodeJS} from './featureDetection';
 import {generateServiceStub} from './fallbackServiceStub';
-import {StreamType} from '.';
+import {StreamType} from './streamingCalls/streaming';
+import * as objectHash from 'object-hash';
+import {google} from '../protos/http';
 
 export {FallbackServiceError};
 export {PathTemplate} from './pathTemplate';
@@ -83,6 +84,7 @@ export class GrpcClient {
   fallback: boolean | 'rest' | 'proto';
   grpcVersion: string;
   private static protoCache = new Map<string, protobuf.Root>();
+  httpRules?: Array<google.api.IHttpRule>;
 
   /**
    * In rare cases users might need to deallocate all memory consumed by loaded protos.
@@ -121,6 +123,7 @@ export class GrpcClient {
     }
     this.fallback = options.fallback !== 'rest' ? 'proto' : 'rest';
     this.grpcVersion = require('../../package.json').version;
+    this.httpRules = (options as GrpcClientOptions).httpRules;
   }
 
   /**
@@ -135,7 +138,7 @@ export class GrpcClient {
   }
 
   loadProtoJSON(json: protobuf.INamespace, ignoreCache = false) {
-    const hash = objectHash(json).toString();
+    const hash = objectHash(JSON.stringify(json)).toString();
     const cached = GrpcClient.protoCache.get(hash);
     if (cached && !ignoreCache) {
       return cached;
@@ -329,8 +332,11 @@ export class GrpcClient {
  */
 export function lro(options: GrpcClientOptions) {
   options = Object.assign({scopes: []}, options);
+  if (options.protoJson) {
+    options = Object.assign(options, {fallback: 'rest'});
+  }
   const gaxGrpc = new GrpcClient(options);
-  return new OperationsClientBuilder(gaxGrpc);
+  return new OperationsClientBuilder(gaxGrpc, options.protoJson);
 }
 
 /**
