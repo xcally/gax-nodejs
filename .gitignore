@@ -8,7 +8,7 @@ docs/
 out/
 system-test/secrets.js
 system-test/*key.json
-build
+# build
 .vscode
 package-lock.json
 .system-test-run/
