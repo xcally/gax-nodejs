@@ -47,17 +47,26 @@ export interface DuplexifyOptions extends DuplexOptions {
 
 export interface Duplexify extends Duplex {
   readonly destroyed: boolean;
-  setWritable(writable: Writable|false|null): void;
-  setReadable(readable: Readable|false|null): void;
+  setWritable(writable: Writable | false | null): void;
+  setReadable(readable: Readable | false | null): void;
 }
 
 export interface DuplexifyConstructor {
-  obj(writable?: Writable|false|null, readable?: Readable|false|null,
-      options?: DuplexifyOptions): Duplexify;
-  new(writable?: Writable|false|null, readable?: Readable|false|null,
-      options?: DuplexifyOptions): Duplexify;
-  (writable?: Writable|false|null, readable?: Readable|false|null,
-   options?: DuplexifyOptions): Duplexify;
+  obj(
+    writable?: Writable | false | null,
+    readable?: Readable | false | null,
+    options?: DuplexifyOptions
+  ): Duplexify;
+  new (
+    writable?: Writable | false | null,
+    readable?: Readable | false | null,
+    options?: DuplexifyOptions
+  ): Duplexify;
+  (
+    writable?: Writable | false | null,
+    readable?: Readable | false | null,
+    options?: DuplexifyOptions
+  ): Duplexify;
 }
 
 /**
@@ -79,7 +88,7 @@ export class StreamProxy extends duplexify {
   type: StreamType;
   private _callback?: Function;
   private _isCancelCalled: boolean;
-  stream?: Duplex&{cancel: () => void};
+  stream?: Duplex & {cancel: () => void};
   /**
    * StreamProxy is a proxy to gRPC-streaming method.
    *
@@ -115,7 +124,7 @@ export class StreamProxy extends duplexify {
     const eventsToForward = ['metadata', 'response', 'status'];
 
     eventsToForward.forEach(event => {
-      stream.on(event, this.emit.bind(this, event));
+      stream.on(event, this.emit.bind(this, event as 'error'));
     });
 
     // We also want to supply the status data as 'response' event to support
@@ -214,8 +223,9 @@ export class GrpcStreamable {
         };
       default:
         warn(
-            'streaming_wrap_unknown_stream_type',
-            `Unknown stream type: ${this.descriptor.type}`);
+          'streaming_wrap_unknown_stream_type',
+          `Unknown stream type: ${this.descriptor.type}`
+        );
     }
     return func;
   }

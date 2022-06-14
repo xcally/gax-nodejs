@@ -30,11 +30,11 @@
  *
  */
 
-import * as grpcProtoLoaderTypes from '@grpc/proto-loader';  // for types only
+import * as grpcProtoLoaderTypes from '@grpc/proto-loader'; // for types only
 import * as fs from 'fs';
 import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 import {getProtoPath} from 'google-proto-files';
-import * as grpcTypes from 'grpc';  // for types only
+import * as grpcTypes from 'grpc'; // for types only
 import * as grpcGcp from 'grpc-gcp';
 import {OutgoingHttpHeaders} from 'http';
 import * as path from 'path';
@@ -60,21 +60,17 @@ const COMMON_PROTO_DIRS = [
   path.join('logging', 'type'),
   path.join('monitoring', 'v3'),
   'longrunning',
-  'protobuf',  // This is an additional path that the common protos depend on.
+  'protobuf', // This is an additional path that the common protos depend on.
   'rpc',
   'type',
 ].map(dir => path.join(googleProtoFilesDir, 'google', dir));
 INCLUDE_DIRS.push(...COMMON_PROTO_DIRS);
 
-const COMMON_PROTO_FILES = COMMON_PROTO_DIRS
-                               .map(dir => {
-                                 return (walk.sync(dir) as string[])
-                                     .filter(f => path.extname(f) === '.proto')
-                                     .map(
-                                         f => path.normalize(f).substring(
-                                             googleProtoFilesDir.length + 1));
-                               })
-                               .reduce((a, c) => a.concat(c), []);
+const COMMON_PROTO_FILES = COMMON_PROTO_DIRS.map(dir => {
+  return (walk.sync(dir) as string[])
+    .filter(f => path.extname(f) === '.proto')
+    .map(f => path.normalize(f).substring(googleProtoFilesDir.length + 1));
+}).reduce((a, c) => a.concat(c), []);
 
 export {GrpcObject} from 'grpc';
 
@@ -89,15 +85,15 @@ export interface MetadataValue {
 }
 
 export interface Metadata {
-  new(): Metadata;
-  set: (key: {}, value?: {}|null) => void;
+  new (): Metadata;
+  set: (key: {}, value?: {} | null) => void;
   clone: () => Metadata;
   value: MetadataValue;
   get: (key: {}) => {};
 }
 
-export type GrpcModule = typeof grpcTypes&{
-  status: {[index: string]: number;};
+export type GrpcModule = typeof grpcTypes & {
+  status: {[index: string]: number};
   isLegacy: boolean;
 };
 
@@ -145,8 +141,10 @@ export class GrpcClient {
     } else {
       // EXPERIMENTAL: If GOOGLE_CLOUD_USE_GRPC_JS is set, use the JS-based
       // implementation of the gRPC client instead. Requires http2 (Node 8+).
-      if (semver.gte(process.version, '8.13.0') &&
-          !!process.env.GOOGLE_CLOUD_USE_GRPC_JS) {
+      if (
+        semver.gte(process.version, '8.13.0') &&
+        !!process.env.GOOGLE_CLOUD_USE_GRPC_JS
+      ) {
         this.grpc = require('@grpc/grpc-js');
         this.grpc.isLegacy = false;
         this.grpcVersion = require('@grpc/grpc-js/package.json').version;
@@ -175,7 +173,9 @@ export class GrpcClient {
     const sslCreds = grpc.credentials.createSsl();
     const client = await this.auth.getClient();
     const credentials = grpc.credentials.combineChannelCredentials(
-        sslCreds, grpc.credentials.createFromGoogleCredential(client));
+      sslCreds,
+      grpc.credentials.createFromGoogleCredential(client)
+    );
     return credentials;
   }
 
@@ -186,7 +186,10 @@ export class GrpcClient {
    * @param options Options for loading the proto file.
    */
   loadFromProto(filename: string, options: grpcProtoLoaderTypes.Options) {
-    const packageDef = grpcProtoLoaderTypes.loadSync(filename, options);
+    const packageDef = grpcProtoLoaderTypes.loadSync(
+      filename,
+      options
+    ) as grpcTypes.PackageDefinition;
     return this.grpc.loadPackageDefinition(packageDef);
   }
 
@@ -201,7 +204,8 @@ export class GrpcClient {
   protected loadProtoLegacy(protoPath: string, filename: string) {
     const resolvedPath = GrpcClient._resolveFile(protoPath, filename);
     const retval = this.grpc.loadObject(
-        protobuf.loadSync(resolvedPath, new GoogleProtoFilesRoot()));
+      protobuf.loadSync(resolvedPath, new GoogleProtoFilesRoot())
+    );
     return retval;
   }
 
@@ -224,7 +228,7 @@ export class GrpcClient {
       enums: String,
       defaults: true,
       oneofs: true,
-      includeDirs
+      includeDirs,
     };
     return this.loadFromProto(filename, options);
   }
@@ -239,8 +243,9 @@ export class GrpcClient {
    *   object).
    */
   loadProto(protoPath: string, filename: string) {
-    return this.grpc.isLegacy ? this.loadProtoLegacy(protoPath, filename) :
-                                this.loadProtoGrpcJs(protoPath, filename);
+    return this.grpc.isLegacy
+      ? this.loadProtoLegacy(protoPath, filename)
+      : this.loadProtoGrpcJs(protoPath, filename);
   }
 
   static _resolveFile(protoPath: string, filename: string) {
@@ -265,14 +270,18 @@ export class GrpcClient {
       }
     }
     return function buildMetadata(
-        abTests?: {}, moreHeaders?: OutgoingHttpHeaders) {
+      abTests?: {},
+      moreHeaders?: OutgoingHttpHeaders
+    ) {
       // TODO: bring the A/B testing info into the metadata.
       let copied = false;
       let metadata = baseMetadata;
       if (moreHeaders) {
         for (const key in moreHeaders) {
-          if (key.toLowerCase() !== 'x-goog-api-client' &&
-              moreHeaders!.hasOwnProperty(key)) {
+          if (
+            key.toLowerCase() !== 'x-goog-api-client' &&
+            moreHeaders!.hasOwnProperty(key)
+          ) {
             if (!copied) {
               copied = true;
               metadata = metadata.clone();
@@ -302,11 +311,19 @@ export class GrpcClient {
    * @return {Object} A mapping of method names to CallSettings.
    */
   constructSettings(
-      serviceName: string, clientConfig: gax.ClientConfig,
-      configOverrides: gax.ClientConfig, headers: OutgoingHttpHeaders) {
+    serviceName: string,
+    clientConfig: gax.ClientConfig,
+    configOverrides: gax.ClientConfig,
+    headers: OutgoingHttpHeaders
+  ) {
     return gax.constructSettings(
-        serviceName, clientConfig, configOverrides, this.grpc.status,
-        {metadataBuilder: this.metadataBuilder(headers)}, this.promise);
+      serviceName,
+      clientConfig,
+      configOverrides,
+      this.grpc.status,
+      {metadataBuilder: this.metadataBuilder(headers)},
+      this.promise
+    );
   }
 
   /**
@@ -336,7 +353,7 @@ export class GrpcClient {
       const apiConfig = grpcGcp.createGcpApiConfig(apiConfigDefinition);
       grpcOptions['channelFactoryOverride'] = grpcGcp.gcpChannelFactoryOverride;
       grpcOptions['callInvocationTransformer'] =
-          grpcGcp.gcpCallInvocationTransformer;
+        grpcGcp.gcpCallInvocationTransformer;
       grpcOptions['gcpApiConfig'] = apiConfig;
     }
     const stub = new CreateStub(serviceAddress, creds, grpcOptions);
@@ -354,10 +371,11 @@ export class GrpcClient {
    *   for an object.
    */
   static createByteLengthFunction(message: {
-    encode:
-        (obj: {}) => {
-          finish: () => Array<{}>
-        }
+    encode: (
+      obj: {}
+    ) => {
+      finish: () => Array<{}>;
+    };
   }) {
     return function getByteLength(obj: {}) {
       return message.encode(obj).finish().length;
