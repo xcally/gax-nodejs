@@ -18,7 +18,7 @@
     "is-stream-ended": "0.1.4",
     "lodash.at": "4.6.0",
     "lodash.has": "4.5.2",
-    "protobufjs": "git+https://github.com/xcally/protobufjsdist.git#0c648d41aca3cce95c1881dbb4cc8247eda0dbea",
+    "protobufjs": "git+https://github.com/xcally/protobufjsdist.git#258ec70b582c0abbea7a8ad21941968451b9a1bd",
     "retry-request": "4.0.0",
     "semver": "6.0.0",
     "walkdir": "0.3.2"
