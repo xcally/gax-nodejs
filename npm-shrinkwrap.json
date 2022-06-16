@@ -15,7 +15,14 @@
     "@grpc/proto-loader": {
       "version": "0.4.0",
       "from": "@grpc/proto-loader@0.4.0",
-      "resolved": "https://registry.npmjs.org/@grpc/proto-loader/-/proto-loader-0.4.0.tgz"
+      "resolved": "https://registry.npmjs.org/@grpc/proto-loader/-/proto-loader-0.4.0.tgz",
+      "dependencies": {
+        "protobufjs": {
+          "version": "6.11.3",
+          "from": "protobufjs@>=6.8.6 <7.0.0",
+          "resolved": "https://registry.npmjs.org/protobufjs/-/protobufjs-6.11.3.tgz"
+        }
+      }
     },
     "@protobufjs/aspromise": {
       "version": "1.1.2",
@@ -69,13 +76,8 @@
     },
     "@types/long": {
       "version": "4.0.2",
-      "from": "@types/long@>=4.0.0 <5.0.0",
+      "from": "@types/long@>=4.0.1 <5.0.0",
       "resolved": "https://registry.npmjs.org/@types/long/-/long-4.0.2.tgz"
-    },
-    "@types/node": {
-      "version": "10.3.2",
-      "from": "@types/node@10.3.2",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.3.2.tgz"
     },
     "abort-controller": {
       "version": "3.0.0",
@@ -578,7 +580,14 @@
     "grpc-gcp": {
       "version": "0.1.1",
       "from": "grpc-gcp@0.1.1",
-      "resolved": "https://registry.npmjs.org/grpc-gcp/-/grpc-gcp-0.1.1.tgz"
+      "resolved": "https://registry.npmjs.org/grpc-gcp/-/grpc-gcp-0.1.1.tgz",
+      "dependencies": {
+        "protobufjs": {
+          "version": "6.11.3",
+          "from": "protobufjs@^6.8.8",
+          "resolved": "https://registry.npmjs.org/protobufjs/-/protobufjs-6.11.3.tgz"
+        }
+      }
     },
     "gtoken": {
       "version": "2.3.3",
@@ -721,9 +730,66 @@
       "resolved": "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz"
     },
     "protobufjs": {
-      "version": "6.8.8",
-      "from": "protobufjs@6.8.8",
-      "resolved": "https://registry.npmjs.org/protobufjs/-/protobufjs-6.8.8.tgz"
+      "version": "6.8.0",
+      "from": "git+https://github.com/xcally/protobufjsdist.git#0c648d41aca3cce95c1881dbb4cc8247eda0dbea",
+      "resolved": "git+https://github.com/xcally/protobufjsdist.git#0c648d41aca3cce95c1881dbb4cc8247eda0dbea",
+      "dependencies": {
+        "@protobufjs/aspromise": {
+          "version": "1.1.2",
+          "from": "@protobufjs/aspromise@1.1.2",
+          "resolved": "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz"
+        },
+        "@protobufjs/base64": {
+          "version": "1.1.2",
+          "from": "@protobufjs/base64@1.1.2",
+          "resolved": "https://registry.npmjs.org/@protobufjs/base64/-/base64-1.1.2.tgz"
+        },
+        "@protobufjs/codegen": {
+          "version": "2.0.4",
+          "from": "@protobufjs/codegen@2.0.4",
+          "resolved": "https://registry.npmjs.org/@protobufjs/codegen/-/codegen-2.0.4.tgz"
+        },
+        "@protobufjs/eventemitter": {
+          "version": "1.1.0",
+          "from": "@protobufjs/eventemitter@1.1.0",
+          "resolved": "https://registry.npmjs.org/@protobufjs/eventemitter/-/eventemitter-1.1.0.tgz"
+        },
+        "@protobufjs/fetch": {
+          "version": "1.1.0",
+          "from": "@protobufjs/fetch@1.1.0",
+          "resolved": "https://registry.npmjs.org/@protobufjs/fetch/-/fetch-1.1.0.tgz"
+        },
+        "@protobufjs/float": {
+          "version": "1.0.2",
+          "from": "@protobufjs/float@1.0.2",
+          "resolved": "https://registry.npmjs.org/@protobufjs/float/-/float-1.0.2.tgz"
+        },
+        "@protobufjs/inquire": {
+          "version": "1.1.0",
+          "from": "@protobufjs/inquire@1.1.0",
+          "resolved": "https://registry.npmjs.org/@protobufjs/inquire/-/inquire-1.1.0.tgz"
+        },
+        "@protobufjs/path": {
+          "version": "1.1.2",
+          "from": "@protobufjs/path@1.1.2",
+          "resolved": "https://registry.npmjs.org/@protobufjs/path/-/path-1.1.2.tgz"
+        },
+        "@protobufjs/pool": {
+          "version": "1.1.0",
+          "from": "@protobufjs/pool@1.1.0",
+          "resolved": "https://registry.npmjs.org/@protobufjs/pool/-/pool-1.1.0.tgz"
+        },
+        "@protobufjs/utf8": {
+          "version": "1.1.0",
+          "from": "@protobufjs/utf8@1.1.0",
+          "resolved": "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz"
+        },
+        "long": {
+          "version": "3.2.0",
+          "from": "long@3.2.0",
+          "resolved": "https://registry.npmjs.org/long/-/long-3.2.0.tgz"
+        }
+      }
     },
     "readable-stream": {
       "version": "2.3.7",
